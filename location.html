@@ -1,0 +1,75 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<body>
+    <p>Click the buttons to track your coordinates.</p>
+
+    <form>
+        <input type="button" onclick="getLocationUpdate();" value="Watch Update" />
+        <input type="button" onclick="stopWatch();" value="Stop Watch" />
+    </form>
+
+    <p id="demo"></p>
+
+    <script type="text/javascript">
+        var watchID;
+        var geoLoc;
+        var x = document.getElementById("demo");
+
+        function showLocation(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var altitude = position.coords.altitude;
+            var speed = position.coords.speed;
+            var timestamp = position.timestamp;
+            // get the start time
+            var tick = new Date(); 
+            // convert it to local time
+            var lap = tick.toLocaleTimeString();
+            
+            //alert("Latitude : " + latitude + " Longitude: " + longitude);
+            x.innerHTML += "<br>------------------------------------------<br>" +
+                "Timestamp: " + timestamp +
+                "<br>Latitude: " + latitude +
+                "<br>Longitude: " + longitude +
+                "<br>Altitude: " + altitude +
+                "<br>Elapsed: " + lap +
+                "<br>Speed: " + speed;
+
+        }
+
+        function errorHandler(err) {
+            if (err.code == 1) {
+                alert("Error: Access is denied!");
+            } else if (err.code == 2) {
+                alert("Error: Position is unavailable!");
+            }
+        }
+
+        function getLocationUpdate() {
+
+            if (navigator.geolocation) {
+
+                // timeout at 10000 milliseconds (10 seconds)
+                var options = {
+                    enableHighAccuracy: true,
+                    timeout: 10000
+                };
+                geoLoc = navigator.geolocation;
+                watchID = geoLoc.watchPosition(showLocation, errorHandler, options);
+                
+            } else {
+                alert("Sorry, browser does not support geolocation!");
+            }
+        }
+
+        function stopWatch() {
+            geoLoc.clearWatch(watchID);
+        }
+    </script>
+
+</body>
+
+</html>
