@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  <p>Click the button to get your coordinates.</p>
+
+  <button onclick="getLocation()">Track It</button>
+
+  <p id="demo"></p>
+
+  <script>
+    var x = document.getElementById("demo");
+
+    var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+    };
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError, options);
+      } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+
+    function showPosition(position) {
+      var latitude = position.coords.latitude;
+      var longitude = position.coords.longitude;
+      var altitude = position.coords.altitude;
+      var speed = position.coords.speed;
+      var timestamp = position.timestamp;
+      // get the start time
+      var tick = new Date();
+      // convert it to local time
+      var lap = tick.toLocaleTimeString();
+
+      x.innerHTML += "<br>------------------------------------------<br>" +
+        "Timestamp: " + timestamp +
+        "<br>Latitude: " + latitude +
+        "<br>Longitude: " + longitude +
+        "<br>Altitude: " + altitude +
+        "<br>Time: " + lap +
+        "<br>Speed: " + speed;
+    }
+
+    function showError(error) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          x.innerHTML = "User denied the request for Geolocation."
+          break;
+        case error.POSITION_UNAVAILABLE:
+          x.innerHTML = "Location information is unavailable."
+          break;
+        case error.TIMEOUT:
+          x.innerHTML = "The request to get user location timed out."
+          break;
+        case error.UNKNOWN_ERROR:
+          x.innerHTML = "An unknown error occurred."
+          break;
+      }
+    }
+  </script>
+
+</body>
+
+</html>
